@@ -1,0 +1,12 @@
+def a1 type byte := 0;
+def b type string := 0; 
+
+def valid type bit := false;
+
+# my comment like that 
+
+type byte my_function (type byte var) 
+{
+	print(var); # test
+	return false; 
+};
