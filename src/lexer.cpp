@@ -1,11 +1,19 @@
 #include <string>
 #include <iostream> // remove
 
-#include "token.h"
+#include "../include/lexer.h"
+
+const std::unordered_map<std::string_view, TokenType> Lexer::keywords_map {
+    { "def",   TokenType::KW_DEF     },
+    { "type",  TokenType::KW_TYPE    },
+    { "bit",   TokenType::TYPE_BIT   },
+    { "byte",  TokenType::TYPE_BYTE  },
+    { "int16", TokenType::TYPE_INT16 }
+}; 
 
 std::vector<Token> Lexer::tokenize()
 {
-	if (src == "")
+	if (buffer == "")
 		throw std::runtime_error("Lexer could not access source string&");
 
 	std::vector<Token> tokens; 
@@ -50,8 +58,7 @@ std::vector<Token> Lexer::tokenize()
 						t.type = TokenType::OP_EQUAL_EQUAL;
 					else 
 						t.type = TokenType::OP_EQUAL; 
-
-						tokens.push_back(t); 
+						tokens.push_back(t);
 						c = advance(2);
 					break;
 
@@ -59,16 +66,13 @@ std::vector<Token> Lexer::tokenize()
 					if (peek(1) == '=') 
 						t.type = TokenType::OP_INITIALIZER; 
 					else {
-
+						//CompileError("\':\' is not a valid expression", 0, 0).throw_err(); 
 					}
 
 					c = advance(2);
 					break;
 			}
-		}
-
-
-		
+		}		
 		//else if (isDigit(c)) 
 		//{
 			
@@ -104,10 +108,9 @@ char Lexer::peek(size_t offset) const
 		return '\0'; 
 
 	return *ptr; 
-	// You are here! Need to write the peek() function to use it in tokenize()
 }
 
-TokenType Lexer::identifyToken(const std::string_view& text, TokenHint hint)
+TokenType Lexer::identifyToken(const std::string_view& text, TokenHint hint) const
 {
 	switch (hint)
 	{
@@ -115,8 +118,8 @@ TokenType Lexer::identifyToken(const std::string_view& text, TokenHint hint)
 			if (text == "true" || text == "false")
 				return TokenType::BOOL_LITERAL; 
 
-			auto it = this->keywords.find(text); // Optimize it! (if possible)
-			return (it != keywords.end() ? it->second : TokenType::ID);
+			auto it = this->keywords_map.find(text); // Optimize it! (if possible)
+			return (it != this->keywords_map.end() ? it->second : TokenType::ID);
 		}
 		case TokenHint::OPERATOR:
 			std::cout << "test";
