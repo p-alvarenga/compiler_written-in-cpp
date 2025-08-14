@@ -46,11 +46,11 @@ class Lexer {
 		const char* eof; 
 		const char* begin; 
 
-		int line = 1;
-		int col = 1;		
+		unsigned int line = 1;
+		unsigned int col = 1;		
 
 		char peek(size_t offset) const; // check next byte on buffer  
-		char advance(); 
+		char advance(size_t step = 1); 
 		//char skipWhiteSpace(); 
 		
 		TokenType identifyToken(const std::string_view& text, TokenHint hint);
@@ -68,6 +68,7 @@ class Lexer {
 			cur(src.data()),
 			eof(src.data() + src.size())
 		{;}
+		~Lexer() = default; // manage free memory here // 
 
 		std::vector<Token> tokenize();
 }; 

@@ -43,13 +43,26 @@ std::vector<Token> Lexer::tokenize()
 			t.line = this->line;
 			t.col  = this->col;
 			
-			switch (c) 
+			switch (c) // MANAGE WHEN peek(size_t) RETURN SENTINEL '\0'
 			{
 				case '=':
-					if (peek(1) == '=')
-					break; 
+					if (peek(1) == '=') 
+						t.type = TokenType::OP_EQUAL_EQUAL;
+					else 
+						t.type = TokenType::OP_EQUAL; 
 
-				case '+':
+						tokens.push_back(t); 
+						c = advance(2);
+					break;
+
+				case ':':
+					if (peek(1) == '=') 
+						t.type = TokenType::OP_INITIALIZER; 
+					else {
+
+					}
+
+					c = advance(2);
 					break;
 			}
 		}
@@ -67,22 +80,29 @@ std::vector<Token> Lexer::tokenize()
 	return tokens;
 }
 
-char Lexer::advance() // ptr to ptr to data
+char Lexer::advance(size_t step) // ptr to ptr to data
 {
-	char c = *(++this->cur);
+	const char* n_ptr = this->cur += step;
+	char b = *n_ptr; 
 
-	if (c == '\n') [[ unlikely ]]
+	if (n_ptr >= this->eof) return '\0'; // manage! 
+
+	if (b == '\n') [[ unlikely ]]
 	{	
 		this->col = 1;
 		this->line++;
 	}
 	else this->col++; 
-	return c; 
+	return b; 
 }
 
 char Lexer::peek(size_t offset) const 
 {
-	const char* ptr = cur + offset;
+	const char* ptr = cur + offset;	
+
+	if (ptr >= eof)
+		return '\0'; 
+
 	return *ptr; 
 	// You are here! Need to write the peek() function to use it in tokenize()
 }
