@@ -8,6 +8,8 @@ class Lexer
 {
 	private: 
 		static const std::unordered_map<std::string_view, TokenType> keywords_map;
+		static const std::unordered_map<std::string_view, TokenType> operators_map;
+
 		std::string buffer; // <- keep it alive!
 		
 		const char* cur;
@@ -17,11 +19,11 @@ class Lexer
 		int line = 1;
 		int col  = 1; 
 	
-		char peek(size_t offset) const;
 		char advance(size_t step = 1);
 
 		TokenType identifyToken(const std::string_view& text, TokenHint hint) const;
-		
+
+		inline char peek(size_t offset) const;
 		inline bool isIdentifierStart(unsigned char c) const;
 		inline bool isIdentifierChar(unsigned char c) const;
 		inline bool isOperatorChar(unsigned char c) const;
@@ -65,6 +67,13 @@ inline bool Lexer::isOperatorChar(unsigned char c) const
 inline bool Lexer::isDigitChar(unsigned char c) const
 {
 	return (unsigned int)(c - '0') <= 9;
+}
+
+char Lexer::peek(size_t offset) const 
+{
+	const char* ptr = cur + offset;	
+	if (ptr >= eof) return '\0'; 
+	return *ptr; 
 }
 
 #endif 

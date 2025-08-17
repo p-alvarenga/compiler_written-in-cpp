@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 	for (Token t : tokens) 
 	{	
 		std::cout << "[ line: " << t.line << ", column: " << t.col << " ]  " 
-			<< t.textptr // remove
+			<< t.textptr
 			<< " TokenType: " << (int)t.type << std::endl;
 	}	
 

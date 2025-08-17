@@ -1,0 +1,35 @@
+17-08-2025:
+	[[ UPDATE ]] The operator identificator is working properly.
+
+	Todo: 
+		- [ ] Write the numerical type identifier;
+		- [ ] Write CompileError class and it's derivatives (LexerError, ParserError...);
+
+
+16-08-2025:
+	[[ SOLVED ]] [!] PROBLEM: Something is really strange in the system of recognizing operators. It follows the same structure of the keywords/id system. So the problem must be simple, solve it pls :)
+	
+
+14-08-2025
+
+	[!] PROBLEM: the Lexer::tokenize() function is identifing token by itself and not asking for identifyToken()
+	[*] NOTE   : Write CompileError and its derivatives (LexerError, ParserError etc.) [with ::throw()]
+
+
+12-08-2025:
+
+	Todo.:
+		1. [ ] Write Lexer::peek(size_t offset) function;
+		2. [ ] Continue writting the tokenize function, processing OperatorChar(c); 
+
+	Notes: 	
+		1. Explore more the use of constexpr keyword
+		2. optimize the Lexer::IdentifyToken() on IdentifierStart case;
+
+
+09-08-2025: 
+
+	Todo: 
+		- [x] Optimize and simplify the Lexer::tokenize() function;
+		- [x] Write the Lexer::identifyKeyword()  # doesn't exist anymore
+		- [x] Write the Lexer::identifyToken() (maybe change the name too) # changed for Lexer::tokenize() 
