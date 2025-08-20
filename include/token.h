@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 enum class TokenType {
-	ID, NUMERICAL, STRING, BOOL_LITERAL, // Literals & Identifier
+	ID, NUMERICAL_INT, NUMERICAL_FLOAT, STRING, BOOL_LITERAL, // Literals & Identifier
 
 	KW_DEF, KW_TYPE, KW, // Keywords
 
@@ -26,11 +26,15 @@ enum class TokenHint {
 	OPERATOR,
 };
 
-struct Token {
-	TokenType type; 
-	std::string_view textptr; 
-	int line = 1;
-	int col  = 1; 
+class Token 
+{
+	public: 
+		TokenType type; 
+		std::string_view textptr; 
+		int line = 1;
+		int col  = 1; 
+
+		explicit Token(int col, int line): col(col), line(line) {;}
 };
 
 #endif

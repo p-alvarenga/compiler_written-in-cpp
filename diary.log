@@ -1,8 +1,8 @@
 17-08-2025:
 	[[ UPDATE ]] The operator identificator is working properly.
 
-	Todo: 
-		- [ ] Write the numerical type identifier;
+	Todo:  
+		- [ ] Write the numerical identifier; (123 & 1.23)
 		- [ ] Write CompileError class and it's derivatives (LexerError, ParserError...);
 
 

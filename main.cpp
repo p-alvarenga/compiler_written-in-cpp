@@ -5,12 +5,10 @@
 
 std::string readFile(std::string& path);
 
-void test_();
-
 int main(int argc, char* argv[])
 {	
 	std::string fpath = argv[1]; 
-	std::string src = readFile(fpath);
+	std::string src = readFile(fpath); // <- need to keep src<std::string> alive !
 
 	Lexer lexer(src); 
 	std::vector<Token> tokens = lexer.tokenize(); 

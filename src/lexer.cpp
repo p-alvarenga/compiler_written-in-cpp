@@ -56,12 +56,9 @@ std::vector<Token> Lexer::tokenize()
 		if (isIdentifierStart(c)) [[ likely ]]
 		{
 			const char* start_ptr = this->cur; 
-			Token t; 
-
-			t.col = this->col;
-			t.line = this->line;
-
-			while (this->cur < this->eof && isIdentifierChar(c)) 
+			Token t(this->col, this->line); 
+	
+			while (this->cur < this->eof && isIdentifierChar(c))
 				c = advance();
 
 			t.textptr = std::string_view(start_ptr, this->cur - start_ptr); 
@@ -70,24 +67,39 @@ std::vector<Token> Lexer::tokenize()
 		} 
 		else if (isOperatorChar(c))
 		{
-			Token t; 
+			Token t(this->col, this->line); 
 			char next_c = peek(1);
-
-			t.line = this->line;
-			t.col  = this->col;
 	
-			if (isOperatorChar(next_c))		
-				t.textptr = std::string_view(cur, 2);
-			else
-				t.textptr = std::string_view(cur, 1); 
-
-			std::cout << "[[ " << t.textptr << " ]]\n"; 
-
+			t.textptr = isOperatorChar(next_c) ? std::string_view(cur, 2) : std::string_view(cur, 1);
 			t.type = identifyToken(t.textptr, TokenHint::OPERATOR);
 			
 			c = isOperatorChar(next_c) ? advance(2) : advance(1); 
 			tokens.push_back(t);
-		}			
+		} 
+		else if (isNumericalStart(c)) 
+		{
+			const char* start_ptr = this->cur; 
+			Token t(this->col, this->line); 
+			
+			t.type = TokenType::NUMERICAL_INT; 
+
+			while (this->cur < this->eof && isNumericalChar(c))
+			{
+				if (c == '.' && t.type == TokenType::NUMERICAL_INT)
+				{
+					if (t.type != TokenType::NUMERICAL_INT)
+						throw std::runtime_error("Unexpected float character '.'");
+					// [[ ATTENTION ]] ^-- CompileError class here 
+
+					t.type = TokenType::NUMERICAL_FLOAT; 
+				}
+
+				c = advance();
+			}	
+			
+			t.textptr = std::string_view(start_ptr, this->cur - start_ptr); 
+			tokens.push_back(t);
+		}
 
 		c =	advance();
 	}
@@ -95,11 +107,11 @@ std::vector<Token> Lexer::tokenize()
 	return tokens;
 }
 
-char Lexer::advance(size_t step) // ptr to ptr to data
+char Lexer::advance(size_t step)
 {
 	const char* nptr = this->cur += step; 
 
-	if (nptr >= this->eof) return '\0'; // manage! 
+	if (nptr >= this->eof) return '\0'; // sentinel 
 
 	if (*nptr == '\n') [[ unlikely ]]
 	{	
@@ -117,7 +129,7 @@ TokenType Lexer::identifyToken(const std::string_view& text, TokenHint hint) con
 	{
 		case TokenHint::WORD: 
 		{	
-			auto it = this->keywords_map.find(text); // Optimize it! (if possible)
+			auto it = this->keywords_map.find(text); // [[ optimize ]]
 			return it != this->keywords_map.end() ? it->second : TokenType::ID;
 		}
 		case TokenHint::OPERATOR:

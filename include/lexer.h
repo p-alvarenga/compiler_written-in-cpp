@@ -27,7 +27,8 @@ class Lexer
 		inline bool isIdentifierStart(unsigned char c) const;
 		inline bool isIdentifierChar(unsigned char c) const;
 		inline bool isOperatorChar(unsigned char c) const;
-		inline bool isDigitChar(unsigned char c) const; 
+		inline bool isNumericalStart(unsigned char c) const;
+		inline bool isNumericalChar(unsigned char c) const; 
 
 	public: 
 		explicit Lexer(const std::string& src): buffer(src)
@@ -64,9 +65,14 @@ inline bool Lexer::isOperatorChar(unsigned char c) const
 	return false;
 }
 
-inline bool Lexer::isDigitChar(unsigned char c) const
+inline bool Lexer::isNumericalChar(unsigned char c) const
 {
-	return (unsigned int)(c - '0') <= 9;
+	return c == '.' || (unsigned int)(c - '0') <= 9;
+}
+
+inline bool Lexer::isNumericalStart(unsigned char c) const 
+{
+	return (unsigned int)(c - '0') <= 9; 
 }
 
 char Lexer::peek(size_t offset) const 
