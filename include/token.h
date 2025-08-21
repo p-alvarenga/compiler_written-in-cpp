@@ -17,7 +17,7 @@ enum class TokenType {
 
 	TYPE_BIT, TYPE_BYTE, TYPE_INT16,
 
-	ERR_UNKNOWN = 9999
+	UNKNOWN = 9999
 };
 
 enum class TokenHint {

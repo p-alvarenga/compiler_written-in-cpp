@@ -100,6 +100,13 @@ std::vector<Token> Lexer::tokenize()
 			t.textptr = std::string_view(start_ptr, this->cur - start_ptr); 
 			tokens.push_back(t);
 		}
+		else 
+		{
+			Token t(this->col, this->line);
+			t.textptr = std::string_view(cur, 1);
+			t.type = TokenType::UNKNOWN; 
+			tokens.push_back(t); 
+		}
 
 		c =	advance();
 	}

@@ -1,13 +1,18 @@
+20-08-2025:
+	[[ TODO ]]
+		- [ ] Recognize string literal ("string")
+		- [ ] Review (in Lexer::tokenize) the way the numerical text is consumed!
+
 17-08-2025:
 	[[ UPDATE ]] The operator identificator is working properly.
 
-	Todo:  
-		- [ ] Write the numerical identifier; (123 & 1.23)
+	[[ TODO ]]
+		- [x] Write the numerical identifier; (123 & 1.23)
 		- [ ] Write CompileError class and it's derivatives (LexerError, ParserError...);
 
 
 16-08-2025:
-	[[ SOLVED ]] [!] PROBLEM: Something is really strange in the system of recognizing operators. It follows the same structure of the keywords/id system. So the problem must be simple, solve it pls :)
+	[!] PROBLEM: Something is really strange in the system of recognizing operators. It follows the same structure of the keywords/id system. So the problem must be simple, solve it pls :) # Solved ;)
 	
 
 14-08-2025

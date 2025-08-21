@@ -2,3 +2,5 @@ def var_1 type byte := 314;
 
 def var_2 type int16 := 3.14;
 def var_3 type bit := true;
+
+&
