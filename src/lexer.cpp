@@ -31,13 +31,15 @@ const std::unordered_map<std::string_view, TokenType> Lexer::m_operators_map {
 	{ "/=", TokenType::OP_SLASH_EQUAL       },
 	{ "^",  TokenType::OP_POWER             },
 	{ ":=", TokenType::OP_COLON_EQUAL       },
-	{ "!=", TokenType::OP_EXCLAMATION_EQUAL },
+	{ ";",  TokenType::OP_SEMICOLON         },
 	{ "<",  TokenType::OP_LESS_THAN         },
 	{ "<=", TokenType::OP_LESS_OR_EQUAL     },
 	{ ">",  TokenType::OP_GREATER_THAN      },
 	{ ">=", TokenType::OP_GREATER_OR_EQUAL  },
-	{ ";",  TokenType::OP_SEMICOLON         },
-};
+	{ "!=", TokenType::OP_EXCLAMATION_EQUAL },
+	{ "||", TokenType::OP_LOGICAL_OR  },
+	{ "&&", TokenType::OP_LOGICAL_AND },
+}; 
 
 std::vector<Token> Lexer::tokenize()
 {

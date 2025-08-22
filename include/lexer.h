@@ -10,7 +10,6 @@ class Lexer
 		static const std::unordered_map<std::string_view, TokenType> m_keywords_map;
 		static const std::unordered_map<std::string_view, TokenType> m_operators_map;
 
-		
 		const char* m_cur;
 		const char* m_begin; 
 		const char* m_eof;

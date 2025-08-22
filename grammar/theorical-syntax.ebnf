@@ -1,0 +1,24 @@
+<Program>    ::= { Statement } ;
+
+<Statement>   ::= Assignment | Declaration | PrintStmt ; 
+<Assignment>  ::= IDENTIFIER "=" <Expr> ";" ;
+<Declaration> ::= "def" IDENTIFIER "type" <VarType> (":=" <Literal>)? ";" ;
+<PrintStmt>   ::= "Print" "(" <Expr> ")" ";" ; 
+
+<Expr>   ::= <Term> { ("+" | "-") <Term> } ;
+<Term>   ::= <Expo> { ("*" | "/") <Expr> } ; 
+<Expo>   ::= <Factor> [ "^" <Expo> ] ;
+<Factor> ::= NUMBER | "(" <Expr> ")" ;
+
+<VarType> ::= "bit" | "byte" | "int16" | "int32" | "int64" | "uint16" | "uint32" | "uint64" | "string" ;
+<Literal> ::= STRING | NUMBER | TRUE | FALSE ;
+
+IDENTIFIER ::= (LETTER | "_") { LETTER | DIGIT | "_" } ;
+STRING ::= '"' { CHARACTER | ESCAPE_SEQUENCE } '"' ;
+NUMBER ::= DIGIT { DIGIT } [ "." DIGIT { DIGIT } ] ; 
+
+LETTER ::= [ a-zA-Z ] ;
+DIGIT  ::= [ 0-9 ]; 
+
+CHARACTER ::= ? ANY CHARACTER EXCEPT '"' AND "\" ? ;
+ESCAPE_SEQUENCE ::= "\" ( '"' | "'" | '\' | 'n' | 't' | 'r' ) ;

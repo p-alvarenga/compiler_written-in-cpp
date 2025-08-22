@@ -1,0 +1,28 @@
+# (using "namespace" TokenType)
+
+<Program> ::= { Statement } ; 
+
+<Statement>   ::= Assignment | Declaration | PrintStmt ;
+<Assignment>  ::= ID OP_EQUAL <Expr> OP_SEMICOLON ;
+<Declaration> ::= KW_DEF ID KW_TYPE <VarType> (OP_COLON_EQUAL <Literal>)? OP_SEMICOLON ;
+
+### <PrintStmt> Not supported yet 
+
+<Expr> ::= <Term> { (OP_PLUS|OP_MINUS) <Term> } ;
+<Term> ::= <Expo> { (OP_STAR|OP_SLASH) <Expr> } ;
+<Expo> ::= <Factor> [ OP_POWER <Expo> ] ;
+<Factor> ::= NUMBER | LPAREN <Expr> RPAREN ;
+
+<VarType> ::= TYPE_BIT | TYPE_BYTE | TYPE_INT16 | TYPE_INT32 | TYPE_INT64 | TYPE_UINT16 | TYPE_UINT32 | TYPE_UINT64 ;
+<Literal> ::= STRING | NUMERICAL_INT | NUMERICAL_FLOAT | BOOL_LITERAL ;
+
+ID     ::= (LETTER | "_") { LETTER | DIGIT | "_" } ;
+STRING ::= '"' { CHARACTER | ESCAPE_SEQUENCE } '"' ;
+NUMBER ::= DIGIT { DIGIT } [ "." DIGIT { DIGIT } ] ;
+
+LETTER ::= [a-zA-Z] ;
+DIGIT  ::= [0-9]; 
+
+CHARACTER ::= ? ANY CHARACTER EXCEPT '"' AND "\" ? ; 
+ESCAPE_SEQUENCE ::= "\" ( '"' | "'" | '\' | 'n' | 't' | 'r' ) ;
+
