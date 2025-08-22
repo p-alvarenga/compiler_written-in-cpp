@@ -6,6 +6,7 @@
 
 enum class TokenType {
 	ID, NUMERICAL_INT, NUMERICAL_FLOAT, STRING, BOOL_LITERAL, // Literals & Identifier
+	LPAREN, RPAREN,
 
 	KW_DEF, KW_TYPE, KW, // Keywords
 
@@ -15,15 +16,15 @@ enum class TokenType {
 	OP_EQUAL_EQUAL, OP_EXCLAMATION_EQUAL, OP_GREATER_THAN, OP_GREATER_OR_EQUAL,
 	OP_LESS_THAN, OP_LESS_OR_EQUAL,
 
-	TYPE_BIT, TYPE_BYTE, TYPE_INT16,
+	TYPE_BIT, TYPE_BYTE, TYPE_INT16, TYPE_INT32, 
+	TYPE_INT64, TYPE_UINT16, TYPE_UINT32, TYPE_UINT64,
 
 	UNKNOWN = 9999
 };
 
 enum class TokenHint {
 	WORD,
-	NUMERICAL, 
-	OPERATOR,
+	OPERATOR
 };
 
 class Token 
@@ -31,6 +32,7 @@ class Token
 	public: 
 		TokenType type; 
 		std::string_view textptr; 
+	
 		int line = 1;
 		int col  = 1; 
 

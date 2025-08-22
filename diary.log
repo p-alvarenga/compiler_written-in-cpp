@@ -1,5 +1,14 @@
+21-08-2025: 
+	- Review the repeat of Token t(int, int) in each if/else statement in Lexer::tokenize
+	- Start writting Parser class using std::vector<Token>; 
+
+
 20-08-2025:
+	[[ UPDATES ]]
+		- Lexer probably good to go; 
+
 	[[ TODO ]]
+		- [ ] Review completly the Lexer class and optmize it's methods!!!
 		- [ ] Recognize string literal ("string")
 		- [ ] Review (in Lexer::tokenize) the way the numerical text is consumed!
 
@@ -30,7 +39,7 @@
 	Notes: 	
 		1. Explore more the use of constexpr keyword
 		2. optimize the Lexer::IdentifyToken() on IdentifierStart case;
-
+		
 
 09-08-2025: 
 

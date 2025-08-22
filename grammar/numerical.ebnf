@@ -1,0 +1,4 @@
+<Expr>   ::= <Term> { ("+" | "-") <Term> } ;
+<Term>   ::= <Expo> { ("*") | "/" <Expr> } ; 
+<Expo>   ::= <Factor> [ "^" <Expo> ] ;
+<Factor> ::= NUMBER | "(" <Expr> ")" ;

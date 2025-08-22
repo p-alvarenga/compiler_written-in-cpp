@@ -1,0 +1,4 @@
+<Var> ::= "def" IDENTIFIER "type" <VarType> (":=" <Literal>)? ";" ;
+<VarType> ::= "bit" | "byte" | "int16" | "int32" | "int64" | "uint16" | "uint32" | "uint64" | "string" | ;
+<Literal> ::= STRING | NUMBER | TRUE | FALSE ;
+IDENTIFIER ::= [a-zA-Z_][a-zA-Z0-9_]* ;

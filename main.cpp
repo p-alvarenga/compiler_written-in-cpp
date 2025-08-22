@@ -26,11 +26,11 @@ int main(int argc, char* argv[])
 std::string readFile(std::string& path) 
 {
 	std::ifstream fs(path, std::ios::binary | std::ios::ate); 
-	std::string buffer; 
+	std::string buffer;
 
 	if (!fs.is_open())
 		throw std::runtime_error("COULD NOT OPEN FILE");
-	
+
 	std::streamsize size = fs.tellg(); 
 	fs.seekg(0, std::ios::beg); 
 
@@ -39,5 +39,3 @@ std::string readFile(std::string& path)
 
 	return buffer;
 }
-
-void test_() { return; }

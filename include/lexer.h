@@ -7,22 +7,20 @@
 class Lexer 
 {
 	private: 
-		static const std::unordered_map<std::string_view, TokenType> keywords_map;
-		static const std::unordered_map<std::string_view, TokenType> operators_map;
+		static const std::unordered_map<std::string_view, TokenType> m_keywords_map;
+		static const std::unordered_map<std::string_view, TokenType> m_operators_map;
 
-		std::string buffer; // <- keep it alive!
 		
-		const char* cur;
-		const char* begin; 
-		const char* eof;
+		const char* m_cur;
+		const char* m_begin; 
+		const char* m_eof;
 
-		int line = 1;
-		int col  = 1; 
+		int m_line = 1;
+		int m_col  = 1; 
 	
+		TokenType identifyToken(const std::string_view& text, TokenHint hint) const; 
+
 		char advance(size_t step = 1);
-
-		TokenType identifyToken(const std::string_view& text, TokenHint hint) const;
-
 		inline char peek(size_t offset) const;
 		inline bool isIdentifierStart(unsigned char c) const;
 		inline bool isIdentifierChar(unsigned char c) const;
@@ -31,11 +29,12 @@ class Lexer
 		inline bool isNumericalChar(unsigned char c) const; 
 
 	public: 
-		explicit Lexer(const std::string& src): buffer(src)
+		std::string m_buffer; // PRIVATE!!! PUBLIC FOR TESTS ONLY!
+		explicit Lexer(const std::string& src): m_buffer(src)
 		{ 
-			begin = src.data();
-			cur = begin;
-			eof = begin + src.size();
+			m_begin = src.data();
+			m_cur = m_begin;
+			m_eof = m_begin + src.size();
 		}
 		~Lexer() = default; // important: struct Token depends on Lexer::buffer; 
 
@@ -77,9 +76,9 @@ inline bool Lexer::isNumericalStart(unsigned char c) const
 
 char Lexer::peek(size_t offset) const 
 {
-	const char* ptr = cur + offset;	
-	if (ptr >= eof) return '\0'; 
-	return *ptr; 
+	const char* nptr = m_cur + offset;	
+	if (nptr >= m_eof) return '\0'; 
+	return *nptr; 
 }
 
 #endif 

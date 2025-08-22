@@ -3,17 +3,22 @@
 
 #include "../include/lexer.h"
 
-const std::unordered_map<std::string_view, TokenType> Lexer::keywords_map {
+const std::unordered_map<std::string_view, TokenType> Lexer::m_keywords_map {
     { "def",   TokenType::KW_DEF       },
     { "type",  TokenType::KW_TYPE      },
     { "bit",   TokenType::TYPE_BIT     },
     { "byte",  TokenType::TYPE_BYTE    },
     { "int16", TokenType::TYPE_INT16   },
+	{ "int32", TokenType::TYPE_INT32   },
+	{ "int64", TokenType::TYPE_INT64   },
+	{ "uint16", TokenType::TYPE_UINT16 },
+	{ "uint32", TokenType::TYPE_UINT32 },
+	{ "uint64", TokenType::TYPE_UINT64 },
 	{ "true",  TokenType::BOOL_LITERAL }, 
 	{ "false", TokenType::BOOL_LITERAL },
 }; 
 
-const std::unordered_map<std::string_view, TokenType> Lexer::operators_map {
+const std::unordered_map<std::string_view, TokenType> Lexer::m_operators_map {
 	{ "=",  TokenType::OP_EQUAL          },
 	{ "==", TokenType::OP_EQUAL_EQUAL    },
 	{ "+",  TokenType::OP_PLUS           },
@@ -36,41 +41,41 @@ const std::unordered_map<std::string_view, TokenType> Lexer::operators_map {
 
 std::vector<Token> Lexer::tokenize()
 {
-	if (buffer == "")
+	if (m_buffer == "")
 		throw std::runtime_error("Lexer could not access source string&");
 
 	std::vector<Token> tokens; 
 	
-	char c = *this->cur;
+	char c = *m_cur;
 
-	while (this->cur != this->eof) 
+	while (m_cur != m_eof) 
 	{	
 		if (c == ' ' || c == '\n') { c = advance(); continue; }
 		if (c == '#') [[ unlikely ]] 
 		{ 
-			while (this->cur < this->eof && c != '\n')
+			while (m_cur < m_eof && c != '\n')
 				c = advance(); 	
 			c = advance(); 
 		} 
 
 		if (isIdentifierStart(c)) [[ likely ]]
 		{
-			const char* start_ptr = this->cur; 
-			Token t(this->col, this->line); 
+			const char* start_ptr = m_cur; 
+			Token t(m_col, m_line); 
 	
-			while (this->cur < this->eof && isIdentifierChar(c))
+			while (m_cur < m_eof && isIdentifierChar(c))
 				c = advance();
 
-			t.textptr = std::string_view(start_ptr, this->cur - start_ptr); 
+			t.textptr = std::string_view(start_ptr, m_cur - start_ptr); 
 			t.type = identifyToken(t.textptr, TokenHint::WORD);
 			tokens.push_back(t);
 		} 
 		else if (isOperatorChar(c))
 		{
-			Token t(this->col, this->line); 
+			Token t(m_col, m_line); 
 			char next_c = peek(1);
 	
-			t.textptr = isOperatorChar(next_c) ? std::string_view(cur, 2) : std::string_view(cur, 1);
+			t.textptr = isOperatorChar(next_c) ? std::string_view(m_cur, 2) : std::string_view(m_cur, 1);
 			t.type = identifyToken(t.textptr, TokenHint::OPERATOR);
 			
 			c = isOperatorChar(next_c) ? advance(2) : advance(1); 
@@ -78,12 +83,12 @@ std::vector<Token> Lexer::tokenize()
 		} 
 		else if (isNumericalStart(c)) 
 		{
-			const char* start_ptr = this->cur; 
-			Token t(this->col, this->line); 
+			const char* start_ptr = m_cur; 
+			Token t(m_col, m_line); 
 			
 			t.type = TokenType::NUMERICAL_INT; 
 
-			while (this->cur < this->eof && isNumericalChar(c))
+			while (m_cur < m_eof && isNumericalChar(c))
 			{
 				if (c == '.' && t.type == TokenType::NUMERICAL_INT)
 				{
@@ -97,13 +102,37 @@ std::vector<Token> Lexer::tokenize()
 				c = advance();
 			}	
 			
-			t.textptr = std::string_view(start_ptr, this->cur - start_ptr); 
+			t.textptr = std::string_view(start_ptr, m_cur - start_ptr); 
 			tokens.push_back(t);
 		}
+		else if (c == '"')
+		{
+			Token t(m_col, m_line);
+
+			const char* start_ptr = m_cur; 
+
+			c = advance();
+
+			while (m_cur < m_eof && c != '"') 
+				c = advance();
+
+			c = advance();
+	
+			t.textptr = std::string_view(start_ptr, m_cur - start_ptr);
+			t.type = TokenType::STRING;
+			
+			tokens.push_back(t); 
+		}
+		else if (c == '(' || c == ')') 
+		{
+			Token t(m_col, m_line); 
+			t.type = c == '(' ? TokenType::LPAREN : TokenType::RPAREN;
+			tokens.push_back(t);
+		} 
 		else 
 		{
-			Token t(this->col, this->line);
-			t.textptr = std::string_view(cur, 1);
+			Token t(m_col, m_line);
+			t.textptr = std::string_view(m_cur, 1);
 			t.type = TokenType::UNKNOWN; 
 			tokens.push_back(t); 
 		}
@@ -116,16 +145,16 @@ std::vector<Token> Lexer::tokenize()
 
 char Lexer::advance(size_t step)
 {
-	const char* nptr = this->cur += step; 
+	const char* nptr = m_cur += step; 
 
-	if (nptr >= this->eof) return '\0'; // sentinel 
+	if (nptr >= m_eof) return '\0'; // sentinel 
 
 	if (*nptr == '\n') [[ unlikely ]]
 	{	
-		this->col = 1;
-		this->line++;
+		m_col = 1;
+		m_line++;
 	}
-	else this->col++; 
+	else m_col++; 
 	return *nptr; 
 }
 
@@ -136,16 +165,14 @@ TokenType Lexer::identifyToken(const std::string_view& text, TokenHint hint) con
 	{
 		case TokenHint::WORD: 
 		{	
-			auto it = this->keywords_map.find(text); // [[ optimize ]]
-			return it != this->keywords_map.end() ? it->second : TokenType::ID;
+			auto it = m_keywords_map.find(text); // [[ optimize ]]
+			return it != m_keywords_map.end() ? it->second : TokenType::ID;
 		}
 		case TokenHint::OPERATOR:
 		{
-			auto it = this->operators_map.find(text);
-			return it != this->operators_map.end() ? it->second : TokenType::ERR_UNKNOWN;
+			auto it = m_operators_map.find(text);
+			return it != m_operators_map.end() ? it->second : TokenType::UNKNOWN;
 		}
-		case TokenHint::NUMERICAL:
-			break;
 	}
 
 	return TokenType::ID;
