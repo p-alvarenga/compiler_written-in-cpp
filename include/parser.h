@@ -18,7 +18,10 @@ class Parser
 	
 		inline Token peek();  
 		inline Token advance(); 
+		
 		inline Token consume(TokenType type, const std::string& msg); 
+		inline Token consumeRange(TokenType find, TokenType min, TokenType max, const std::string& msg);
+
 		inline bool match(TokenType type); 
 
 		std::unique_ptr<Declaration> parseDeclaration();
@@ -59,6 +62,18 @@ Token Parser::consume(TokenType type, const std::string& msg)
 {
 	if (type == peek().type) return advance(); 
 	
+	throw std::runtime_error(msg);
+}
+
+Token Parser::consumeRange(TokenType find, TokenType min, TokenType max, const std::string& msg)
+{
+	for (int i = (int)min; i <= (int)max; i++) 
+	{
+		if (find == (TokenType)i)
+		{
+			return advance();  
+		}
+	}
 	throw std::runtime_error(msg);
 }
 

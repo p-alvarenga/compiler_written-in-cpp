@@ -26,7 +26,6 @@ class Program: public ASTNode
 {
 	public: 
 		std::vector<std::unique_ptr<Statement>> stmts; 
-
 };
 
 // STATEMENTS ::= Assignment | Declaration | PrintStatement
@@ -37,10 +36,10 @@ class Assignment: public Statement
 {	
 	public: 
 		std::string_view identifier; // pointer ?
-		TokenType op;
+		TokenType oper;
 		std::unique_ptr<Expr> expr;
 
-		Assignment(): op(TokenType::UNKNOWN) {;}
+		Assignment(): oper(TokenType::UNKNOWN) {;}
 };
 
 class Declaration: public Statement 
@@ -60,9 +59,9 @@ class Expr: public ASTNode
 		bool is_nil;
 
 		std::unique_ptr<Term> left, right;
-		TokenType oper; // TokenType::OP_MINUS | TokenType::OP_PLUS
+		TokenType oper; // TokenType::OP_MINUS | TokenType::OP_PLUS 
 
-		Expr(): oper(TokenType::UNKNOWN), is_nil(true) {}
+		Expr(): oper(TokenType::UNKNOWN), is_nil(true) {;}
 };
 
 
@@ -76,14 +75,15 @@ class Term: public ASTNode
 class Expo: public ASTNode
 {
 	public:
-		std::unique_ptr<Factor> left, right; 
+		std::unique_ptr<Factor> left;  
+		std::unique_ptr<Expr> expr;
 };
 
 class Factor: public ASTNode 
 {
-	TokenType data_T; 
-
 	public: 
+		TokenType data_T; 
+		std::string_view data;
 };
 
 #endif

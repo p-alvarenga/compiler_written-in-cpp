@@ -3,7 +3,7 @@
 <Program> ::= { Statement } ; 
 
 <Statement>   ::= Assignment | Declaration | PrintStmt ;
-<Assignment>  ::= ID OP_EQUAL <Expr> OP_SEMICOLON ; # def myvar type <TYPE> (:= <Expr>)? 
+<Assignment>  ::= ID OP_EQUAL (<Expr> | STRING>)OP_SEMICOLON ; # def myvar type <TYPE> (:= <Expr>)? 
 <Declaration> ::= KW_DEF ID KW_TYPE <VarType> (OP_COLON_EQUAL <Literal>)? OP_SEMICOLON ;
 
 # <PrintStmt> Not supported yet 
