@@ -1,6 +1,9 @@
 #ifndef PARSER__H__
 #define PARSER__H__
 
+#include <memory>
+#include <stdexcept>
+
 #include "token.h"
 #include "ast-nodes.h"
 
@@ -11,36 +14,41 @@ class Parser
 		std::vector<Token> m_tokens; 
 
 	public: 
-		explicit Parser(std::vector<Token>& tkns): m_it(0), m_tokens(t); 
+		explicit Parser(std::vector<Token>& tkns): m_it(0), m_tokens(tkns) {;} 
 	
 		inline Token peek();  
 		inline Token advance(); 
-		Token consume(TokenType type, const std::string& msg); 
+		inline Token consume(TokenType type, const std::string& msg); 
+		inline bool match(TokenType type); 
 
-		bool match(TokenType type); 
-		std::unique_ptr<Statement> parseStmt();
+		std::unique_ptr<Declaration> parseDeclaration();
+		std::unique_ptr<Assignment>  parseAssignment(); 
+		// print statement
+
+		std::unique_ptr<Expr>   parseExpr();
+		std::unique_ptr<Term>   parseTerm(); 
+		std::unique_ptr<Expo>   parseExpo();
+		std::unique_ptr<Factor> parseFactor(); 
 };
 
-Token Parser::peek() { return m_tokens[it]; }
+Token Parser::peek() { return m_tokens[m_it]; }
 Token Parser::advance()
 {
-	it++; 
-
-	if (it >= m_tokens.size())
+	if (++m_it >= m_tokens.size())
 	{
 		Token t(0, 0); 
-		t.type = TokenType::EOF; 
+		t.type = TokenType::END_OF_FILE; 
 		return t; 
 	}
 
-	return m_tokens[it];
+	return m_tokens[m_it];
 }
 
 bool Parser::match(TokenType type)
 {
-	if (m_tokens[it].type == type)
+	if (m_tokens[m_it].type == type)
 	{
-		advance(); 
+		advance();
 		return true; 
 	}
 
@@ -50,6 +58,7 @@ bool Parser::match(TokenType type)
 Token Parser::consume(TokenType type, const std::string& msg)
 {
 	if (type == peek().type) return advance(); 
+	
 	throw std::runtime_error(msg);
 }
 

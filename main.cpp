@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "include/lexer.h"
+#include "include/token.h"
 
 std::string readFile(std::string& path);
 

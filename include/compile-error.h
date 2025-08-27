@@ -16,7 +16,7 @@ class CompileError {
 			col(col)
 		{;}
 
-		void throw_err();
+		inline void throw_err();
 };
 
 void CompileError::throw_err() 
